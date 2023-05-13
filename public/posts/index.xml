@@ -18,5 +18,15 @@
 Access your remote C2 server via SSH and modify /etc/ssh/sshd_config so the following are enabled: AllowTcpForwarding yes GatewayPorts yes Restart sshd with systemd: sudo systemctl restart ssh From your attacking machine, create a tunnel via SSH from the remote server so that anything that hits port 38193 will be redirected to the attacker&amp;rsquo;s instance of ZAP ssh -N -R 38193:localhost:38193 user@attacker.</description>
     </item>
     
+    <item>
+      <title>Exploiting Cross-Site Scripting to Steal Cookies with OWASP ZAP</title>
+      <link>http://kurobeats.github.io/posts/exploiting-cross-site-scripting-to-steal-cookies-with-owasp-zap/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://kurobeats.github.io/posts/exploiting-cross-site-scripting-to-steal-cookies-with-owasp-zap/</guid>
+      <description>Using cross-site scripting (XSS) to steal cookies is a common method of exploitation as cookies are widely used by web applications for session management. With some XSS vulnerabilities, an attacker can forward the victim&amp;rsquo;s cookies to their own domain, manually insert them into their browser, and assume the victim&amp;rsquo;s identity.
+However, there are several limitations to this approach in practice, including the possibility that the victim is not logged in, that cookies are hidden from JavaScript using the HttpOnly flag, that sessions are locked to additional factors such as the user&amp;rsquo;s IP address, and that the session might time out before it can be hijacked.</description>
+    </item>
+    
   </channel>
 </rss>
