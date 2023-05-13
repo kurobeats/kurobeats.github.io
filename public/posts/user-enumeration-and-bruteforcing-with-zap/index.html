@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head><title>User Enumeration and Bruteforcing With OWASP ZAP &ndash; Chaotic Solutions</title>
+<meta name="description" content="A blog about things that can be used, by people.">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="http://kurobeats.github.io/css/palettes/dracula.css">
+<link rel="stylesheet" href="http://kurobeats.github.io/css/risotto.css">
+<link rel="stylesheet" href="http://kurobeats.github.io/css/custom.css">
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+    <h1 class="page__logo"><a href="http://kurobeats.github.io/" class="page__logo-inner">Chaotic Solutions</a></h1>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="http://kurobeats.github.io/posts/" title="">Posts</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>User Enumeration and Bruteforcing With OWASP ZAP</h1>
+    </header>
+    
+    <div class="content__body">
+        <p>So, you&rsquo;ve been told to (legally) break into a WordPress website. Where to start? You can&rsquo;t go wrong investing a bit of time trying to break into legitmate user accounts. Here&rsquo;s how you can do that with ZAP.</p>
+<p>Target website: https://192.168.122.34</p>
+<p><img src="/img/Screenshot_20230513_183404.png" alt="Screenshot_20230513_183404.png"></p>
+<p>There&rsquo;s a few way to enumerate users on a WordPess blog and <code>wpscan</code> does these easily. We&rsquo;ll be taking a slight different approach and target the password reset page (https://192.168.122.34/wp-login.php?action=lostpassword) and the login page (https://192.168.122.34/wp-login.php).</p>
+<p>The password reset page for WordPress blogs is very user-friendly, for users <em>and</em> attackers. It provides visitors to the page helpful clues if a particular user exists. For example, have a look at the message received when we put an invalid username into the &ldquo;Username or Email Address&rdquo; field:</p>
+<p><img src="/img/Screenshot_20230513_184058.png" alt="Screenshot_20230513_184058.png"></p>
+<p>The POST request returns a Status code 200 sigifying that the page has just reloaded as seen by the following ZAP screenshot:</p>
+<p><img src="/img/Screenshot_20230513_184617.png" alt="Screenshot_20230513_184617.png"></p>
+<p>As you can see, it&rsquo;s told us that there&rsquo;s no reason to bruteforce passwords for that username as it doesn&rsquo;t exist. Now if we put a valid username, the result is dramatically different:</p>
+<p><img src="/img/Screenshot_20230513_184248.png" alt="Screenshot_20230513_184248.png"></p>
+<p>Additionally, the POST request returns a Status code 302 sigifying that the page has redirected us (presumably) to another page to tell us the password reset process has commenced:</p>
+<p><img src="/img/Screenshot_20230513_185007.png" alt="Screenshot_20230513_185007.png"></p>
+<p>Rather than manually punch in usernames one at a time, we can automate this process with ZAP&rsquo;s fuzzer. To demonstrate we use make use of this user list:</p>
+<pre tabindex="0"><code>root
+test
+guest
+info
+adm
+mysql
+user
+administrator
+oracle
+ftp
+pi
+puppet
+ansible
+admin
+ec2-user
+vagrant
+azureuser
+</code></pre><p>To setup up the attack, we want to highlight the incorrect username in the request, right-click and select &ldquo;Fuzz&hellip;&rdquo;:</p>
+<p><img src="/img/Screenshot_20230513_185437.png" alt="Screenshot_20230513_185437.png"></p>
+<p>Add in our list of usernames by clicking &ldquo;Payloads&hellip;&rdquo;:</p>
+<p><img src="/img/Screenshot_20230513_195425.png" alt="Screenshot_20230513_195425.png"></p>
+<p>Then click &ldquo;Start Fuzzer&rdquo;:</p>
+<p><img src="/img/Screenshot_20230513_195447.png" alt="Screenshot_20230513_195447.png"></p>
+<p>And there we have it, the Fuzz has revealed a correct username for us to target:</p>
+<p><img src="/img/Screenshot_20230513_195701.png" alt="Screenshot_20230513_195701.png"></p>
+<p>Now we can turn our attention to the login page. What we want to do is attempt a login so we have a request to work with for the next Fuzz:</p>
+<p><img src="/img/Screenshot_20230513_200551.png" alt="Screenshot_20230513_200551.png"></p>
+<p>As we did before, we will highlight the incorrect password in the request, select Fuzz, select payloads, add our password list and click &ldquo;Start Fuzzer&rdquo;:</p>
+<p><img src="/img/Screenshot_20230513_200831.png" alt="Screenshot_20230513_200831.png"></p>
+<p>Here&rsquo;s my password list for the sake of this example:</p>
+<pre tabindex="0"><code>password
+123456
+123456789
+qwerty
+password
+12345
+12345678
+111111
+1234567
+123123
+qwerty123
+1q2w3e
+1234567890
+DEFAULT
+Password123!
+000000
+abc123
+654321
+123321
+qwertyuiop
+Iloveyou
+666666
+</code></pre><p>After we run the Fuzz, we (should) have a correct password! <code>Password123!</code>, very secure:</p>
+<p><img src="/img/Screenshot_20230513_200846.png" alt="Screenshot_20230513_200846.png"></p>
+<p>And we are in!</p>
+<p><img src="/img/Screenshot_20230513_200928.png" alt="Screenshot_20230513_200928.png"></p>
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="http://kurobeats.github.io/img/favicon.png" alt="Logo">
+<h1 class="about__title">Chaotic Solutions</h1>
+<p class="about__description">A blog about things that can be used, by people.</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/kurobeats" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://discordapp.com/users/218920799967510529" rel="me" aria-label="Discord" title="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://au.linkedin.com/in/acozamanis" rel="me" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    <p>In this brief piece, you&#39;ll learn a way to perform user enumeration and bruteforcing with OWASP ZAP.</p>
+    
+        <p>
+            By Anthony Cozamanis, 
+            2023-05-13
+        </p>
+    
+
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">Anthony Cozamanis (CC BY 4.0)</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>

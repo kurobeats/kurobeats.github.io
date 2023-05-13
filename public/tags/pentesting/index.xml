@@ -52,5 +52,16 @@ Access your remote C2 server via SSH and modify /etc/ssh/sshd_config so the foll
 However, there are several limitations to this approach in practice, including the possibility that the victim is not logged in, that cookies are hidden from JavaScript using the HttpOnly flag, that sessions are locked to additional factors such as the user&amp;rsquo;s IP address, and that the session might time out before it can be hijacked.</description>
     </item>
     
+    <item>
+      <title>User Enumeration and Bruteforcing With OWASP ZAP</title>
+      <link>http://kurobeats.github.io/posts/user-enumeration-and-bruteforcing-with-zap/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://kurobeats.github.io/posts/user-enumeration-and-bruteforcing-with-zap/</guid>
+      <description>So, you&amp;rsquo;ve been told to (legally) break into a WordPress website. Where to start? You can&amp;rsquo;t go wrong investing a bit of time trying to break into legitmate user accounts. Here&amp;rsquo;s how you can do that with ZAP.
+Target website: https://192.168.122.34
+There&amp;rsquo;s a few way to enumerate users on a WordPess blog and wpscan does these easily. We&amp;rsquo;ll be taking a slight different approach and target the password reset page (https://192.</description>
+    </item>
+    
   </channel>
 </rss>
