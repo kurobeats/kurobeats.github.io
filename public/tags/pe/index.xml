@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pe on Chaotic Solutions</title>
+    <link>http://kurobeats.github.io/tags/pe/</link>
+    <description>Recent content in pe on Chaotic Solutions</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>Anthony Cozamanis (CC BY 4.0)</copyright>
+    <lastBuildDate>Mon, 26 Jun 2017 00:00:00 +0000</lastBuildDate><atom:link href="http://kurobeats.github.io/tags/pe/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Backdooring Windows Executable Files</title>
+      <link>http://kurobeats.github.io/posts/backdooring-windows-executable-files/</link>
+      <pubDate>Mon, 26 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://kurobeats.github.io/posts/backdooring-windows-executable-files/</guid>
+      <description>Have you ever wondered how people conceal malicious code in binaries? I certainly did, but it wasn&amp;rsquo;t until many years after I had repeatedly infected my personal computers with backdoored keygens. Upon conducting a brief online search, I found numerous tutorials that explained the process. However, most of them referred to antiquated tools that were no longer in use. Other tutorials that I tried out did not function as expected or advertised.</description>
+    </item>
+    
+  </channel>
+</rss>

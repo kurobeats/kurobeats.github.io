@@ -6,6 +6,15 @@
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url><url>
+    <loc>http://kurobeats.github.io/tags/android/</loc>
+    <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://kurobeats.github.io/posts/android-testing-proxy-setup/</loc>
+    <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://kurobeats.github.io/tags/burp/</loc>
+    <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://kurobeats.github.io/posts/determining-the-number-of-columns-returned-by-a-query-using-sqli/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
   </url><url>
@@ -35,6 +44,21 @@
   </url><url>
     <loc>http://kurobeats.github.io/tags/zap/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://kurobeats.github.io/tags/backdoor/</loc>
+    <lastmod>2017-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://kurobeats.github.io/posts/backdooring-windows-executable-files/</loc>
+    <lastmod>2017-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://kurobeats.github.io/series/payloads/</loc>
+    <lastmod>2017-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://kurobeats.github.io/tags/pe/</loc>
+    <lastmod>2017-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://kurobeats.github.io/tags/windows/</loc>
+    <lastmod>2017-06-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://kurobeats.github.io/categories/</loc>
   </url>

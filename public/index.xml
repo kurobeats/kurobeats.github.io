@@ -9,6 +9,18 @@
     <copyright>Anthony Cozamanis (CC BY 4.0)</copyright>
     <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://kurobeats.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Android Testing Proxy Setup</title>
+      <link>http://kurobeats.github.io/posts/android-testing-proxy-setup/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://kurobeats.github.io/posts/android-testing-proxy-setup/</guid>
+      <description>Note: Setup the Android device like normal in Android studio. Get the device ID:
+cd ${ANDROID_SDK}/tools/emulator ./emulator -list-avds The ID will look like Nexus_6_API_26
+Setup TLS Export the CA from either Burp or ZAP (which ever you will be using) and rename to an Android friendly format, the cert hash plus string &amp;ldquo;.0&amp;rdquo;
+Burp cp ca.der $(openssl x509 -inform DER -subject_hash_old -in ca.der | head -n 1)&amp;#34;.0&amp;#34; ZAP cp owasp_zap_root_ca.cer $(openssl x509 -inform PEM -subject_hash_old -in owasp_zap_root_ca.</description>
+    </item>
+    
+    <item>
       <title>Determining the Number of Columns Returned by a Query Using SQLi</title>
       <link>http://kurobeats.github.io/posts/determining-the-number-of-columns-returned-by-a-query-using-sqli/</link>
       <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
@@ -38,6 +50,15 @@ Access your remote C2 server via SSH and modify /etc/ssh/sshd_config so the foll
       <guid>http://kurobeats.github.io/posts/exploiting-cross-site-scripting-to-steal-cookies-with-owasp-zap/</guid>
       <description>Using cross-site scripting (XSS) to steal cookies is a common method of exploitation as cookies are widely used by web applications for session management. With some XSS vulnerabilities, an attacker can forward the victim&amp;rsquo;s cookies to their own domain, manually insert them into their browser, and assume the victim&amp;rsquo;s identity.
 However, there are several limitations to this approach in practice, including the possibility that the victim is not logged in, that cookies are hidden from JavaScript using the HttpOnly flag, that sessions are locked to additional factors such as the user&amp;rsquo;s IP address, and that the session might time out before it can be hijacked.</description>
+    </item>
+    
+    <item>
+      <title>Backdooring Windows Executable Files</title>
+      <link>http://kurobeats.github.io/posts/backdooring-windows-executable-files/</link>
+      <pubDate>Mon, 26 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://kurobeats.github.io/posts/backdooring-windows-executable-files/</guid>
+      <description>Have you ever wondered how people conceal malicious code in binaries? I certainly did, but it wasn&amp;rsquo;t until many years after I had repeatedly infected my personal computers with backdoored keygens. Upon conducting a brief online search, I found numerous tutorials that explained the process. However, most of them referred to antiquated tools that were no longer in use. Other tutorials that I tried out did not function as expected or advertised.</description>
     </item>
     
   </channel>

