@@ -1,3 +1,8 @@
-baseURL = 'http://example.org/'
+baseURL = 'http://kurobeats.github.io/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Chaotic Solutions'
+theme = 'hugo-bearcub'
+
+[params]
+  author = "Anthony Cozamanis"
+  description = "A site of information."
