@@ -1,8 +1,48 @@
 baseURL = 'http://kurobeats.github.io/'
-languageCode = 'en-us'
+languageCode = 'en'
 title = 'Chaotic Solutions'
-theme = 'hugo-bearcub'
+theme = 'risotto'
+author = "Anthony Cozamanis"
+copyright = "Anthony Cozamanis (CC BY 4.0)"
+sectionPagesMenu = "main"
 
 [params]
-  author = "Anthony Cozamanis"
-  description = "A site of information."
+noindex = false
+mainSections = ["post"]
+
+[params.theme]
+palette = "dracula"
+
+# Sidebar: about/bio
+[params.about]
+title = "Chaotic Solutions"
+description = "A blog about things that can be used, by people."
+logo = "img/favicon.png"
+
+[[params.socialLinks]]
+icon = "fa-brands fa-github"
+title = "GitHub"
+url = "https://github.com/kurobeats"
+
+[[params.socialLinks]]
+icon = "fa-brands fa-discord"
+title = "Discord"
+url = "https://discordapp.com/users/218920799967510529"
+
+[[params.socialLinks]]
+icon = "fa-brands fa-linkedin"
+title = "LinkedIn"
+url = "https://au.linkedin.com/in/acozamanis"
+
+[menu]
+
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 10
+
+[taxonomies]
+category = "categories"
+tag = "tags"
+series = "series"

