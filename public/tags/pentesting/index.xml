@@ -33,6 +33,18 @@ Ok, something bad is happening, I got the following when I send a GET request to
     </item>
     
     <item>
+      <title>Exploiting Blind SQLi by Triggering Conditional Responses with OWASP ZAP</title>
+      <link>http://kurobeats.github.io/posts/exploiting-blind-sqli-by-triggering-conditional-responses-with-owasp-zap/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://kurobeats.github.io/posts/exploiting-blind-sqli-by-triggering-conditional-responses-with-owasp-zap/</guid>
+      <description>Note: This was part of an overall effort to complete PortSwigger&amp;rsquo;s Web Security Academy without Burp Suite.
+An application that utilises tracking cookies for collecting usage analytics requires requests to include a cookie header similar to the following:
+Cookie: TrackingId=u5YD3PapBcR4lN3e7Tj4
+GET https://acc21f2c1e7c6c578017078200f3009b.web-security-academy.net/filter?category=Gifts HTTP/1.1 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8 Accept-Language: en-US,en;q=0.5 Connection: keep-alive Referer: https://acc21f2c1e7c6c578017078200f3009b.web-security-academy.net/filter?category=Gifts Cookie: TrackingId=ttA5PuFVqBx32BKR; session=IOnCeWQ4D8oa7OTRWL5c1osLrStRH4CV Upgrade-Insecure-Requests: 1 Host: acc21f2c1e7c6c578017078200f3009b.web-security-academy.net When a request containing a TrackingId cookie is being handled, the application uses an SQL query to check whether the user is a recognised user.</description>
+    </item>
+    
+    <item>
       <title>Exploiting Cross-Site Scripting to Capture Passwords With OWASP ZAP</title>
       <link>http://kurobeats.github.io/posts/exploiting-cross-site-scripting-to-capture-passwords-with-owasp-zap/</link>
       <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>

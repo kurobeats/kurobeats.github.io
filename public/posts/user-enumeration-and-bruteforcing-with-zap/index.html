@@ -77,11 +77,11 @@ azureuser
 <p><img src="/img/Screenshot_20230513_195425.png" alt="Screenshot_20230513_195425.png"></p>
 <p>Then click &ldquo;Start Fuzzer&rdquo;:</p>
 <p><img src="/img/Screenshot_20230513_195447.png" alt="Screenshot_20230513_195447.png"></p>
-<p>And there we have it, the Fuzz has revealed a correct username for us to target:</p>
+<p>And there we have it, the Fuzz has revealed a correct username for us to target, <code>admin</code>:</p>
 <p><img src="/img/Screenshot_20230513_195701.png" alt="Screenshot_20230513_195701.png"></p>
 <p>Now we can turn our attention to the login page. What we want to do is attempt a login so we have a request to work with for the next Fuzz:</p>
 <p><img src="/img/Screenshot_20230513_200551.png" alt="Screenshot_20230513_200551.png"></p>
-<p>As we did before, we will highlight the incorrect password in the request, select Fuzz, select payloads, add our password list and click &ldquo;Start Fuzzer&rdquo;:</p>
+<p>As we did before, we will highlight the incorrect password in the request, select Fuzz, select &ldquo;Payloads&hellip;&rdquo;, add our password list and click &ldquo;Start Fuzzer&rdquo;:</p>
 <p><img src="/img/Screenshot_20230513_200831.png" alt="Screenshot_20230513_200831.png"></p>
 <p>Here&rsquo;s my password list for the sake of this example:</p>
 <pre tabindex="0"><code>password
@@ -106,7 +106,7 @@ abc123
 qwertyuiop
 Iloveyou
 666666
-</code></pre><p>After we run the Fuzz, we (should) have a correct password! <code>Password123!</code>, very secure:</p>
+</code></pre><p>After we run the Fuzz, we (should) have a correct password. <code>Password123!</code>, very secure:</p>
 <p><img src="/img/Screenshot_20230513_200846.png" alt="Screenshot_20230513_200846.png"></p>
 <p>And we are in!</p>
 <p><img src="/img/Screenshot_20230513_200928.png" alt="Screenshot_20230513_200928.png"></p>

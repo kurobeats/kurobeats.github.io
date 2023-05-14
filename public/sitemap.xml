@@ -18,6 +18,9 @@
     <loc>http://kurobeats.github.io/posts/determining-the-number-of-columns-returned-by-a-query-using-sqli/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://kurobeats.github.io/posts/exploiting-blind-sqli-by-triggering-conditional-responses-with-owasp-zap/</loc>
+    <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://kurobeats.github.io/posts/exploiting-cross-site-scripting-to-capture-passwords-with-owasp-zap/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
   </url><url>
